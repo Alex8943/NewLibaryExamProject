@@ -4,12 +4,12 @@ if(process.env.NODE_ENV !== 'production'){
 
 const express = require('express');
 const app = express();
+
 const expressLayouts = require('express-ejs-layouts');
 const bodyParser = require("body-parser"); //import body-parser
 const indexRouter = require("./controllers/index"); //import index.js from controllers folder
 const authorRouter = require("./controllers/authors"); //import authors.js from controllers folder
 const bookRouter = require("./controllers/books");
-
 
 app.set("view engine", "ejs"); // set view engine to ejs, so we can use ejs files
 app.set("views", __dirname + "/views"); //tell where to find the views
@@ -28,9 +28,10 @@ db.on("error", error => console.error(error));
 db.once("open" , () => console.log("Connected to Mongoose"));
 
 
+//routes that needs to be autjenticated to. 
 app.use("/", indexRouter); //use index.js from routes folder (imported above")
 app.use("/authors", authorRouter); //use authors.js from routes folder (imported above")
-app.use("/books", bookRouter);
+app.use("/books", bookRouter); // use books.js from routes folder (imported above")
 
 
 app.listen(3000, () => console.log('Server running on port 3000')); //

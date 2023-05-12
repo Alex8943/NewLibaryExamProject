@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+const path = require("path"); 
 const coverImageBasePath = "uploads/bookCovers" //this is the path to the folder where we will store the images
 
 const bookSchema = new mongoose.Schema({
@@ -34,6 +34,14 @@ const bookSchema = new mongoose.Schema({
     }
 
 });
+
+//this method is used to create a virtual property that will return the path to the cover image
+bookSchema.virtual("coverImagePath").get(function() {
+    if(this.coverImageName != null) {
+        return path.join("/", coverImageBasePath, this.coverImageName)
+    }
+}); 
+
 
 module.exports = mongoose.model("Book", bookSchema); //export the model
 module.exports.coverImageBasePath = coverImageBasePath; //export the path to the folder where we will store the images
