@@ -15,7 +15,7 @@ const upload = multer({
 })
 
 //All books route
-router.get("/", checkAuthenticated, async (req, res) => {
+router.get("/", async (req, res) => {
     let query = Book.find()
     if(req.query.title != null && req.query.title != ""){
         query = query.regex("title", new RegExp(req.query.title, "i"))
@@ -44,13 +44,13 @@ router.get("/", checkAuthenticated, async (req, res) => {
 
 
 //New book route
-router.get("/new", checkAuthenticated, async (req, res) => {
+router.get("/new", async (req, res) => {
     renderNewPage(res, new Book())
 });
 
 
 // Create Book Route
-router.post('/', upload.single('cover'), checkAuthenticated, async (req, res) => {
+router.post('/', upload.single('cover'), async (req, res) => {
     const fileName = req.file != null ? req.file.filename : null
     const book = new Book({
       title: req.body.title,
@@ -92,13 +92,6 @@ async function renderNewPage(res, book, hasError = false) {
       res.redirect('/protected/books')
     }
 }
-
-function checkAuthenticated(req, res, next){
-  if(req.isAuthenticated()){
-      return next()
-  }
-  res.redirect("/login")
-}  
 
 
 

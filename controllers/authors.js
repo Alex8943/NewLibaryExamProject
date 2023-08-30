@@ -7,7 +7,7 @@ const f = require('./index.js');
 
 
 // All Authors Route
-router.get('/', checkAuthenticated, async (req, res) => {
+router.get('/', async (req, res) => {
     let searchOptions = {}
     if (req.query.name != null && req.query.name !== '') {
       searchOptions.name = new RegExp(req.query.name, 'i')
@@ -24,13 +24,13 @@ router.get('/', checkAuthenticated, async (req, res) => {
   })
 
 //New auther route
-router.get("/new", checkAuthenticated, (req, res) => {
+router.get("/new", (req, res) => {
     res.render("authors/new", { author: new Author() })
 });
 
 
 //Create auther route (async)
-router.post("/", checkAuthenticated, async (req, res) => {
+router.post("/", async (req, res) => {
     const author = new Author({
         name: req.body.name
     })
@@ -45,13 +45,5 @@ router.post("/", checkAuthenticated, async (req, res) => {
         })
     }
 });
-
-function checkAuthenticated(req, res, next){
-  if(req.isAuthenticated()){
-      return next()
-  }
-  res.redirect("/login")
-}  
-
 
 module.exports = router; //export router so we can use it in app.js

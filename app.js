@@ -28,10 +28,9 @@ db.on("error", error => console.error(error));
 db.once("open" , () => console.log("Connected to Mongoose"));
 
 
-//routes that needs to be autjenticated to. 
 app.use("/", indexRouter); //use index.js from routes folder (imported above")
 app.use("/authors", authorRouter); //use authors.js from routes folder (imported above")
 app.use("/books", bookRouter); // use books.js from routes folder (imported above")
 
 
-app.listen(3000, () => console.log('Server running on port 3000')); //
+app.listen(8080, () => console.log('Server running on port 8080')); //

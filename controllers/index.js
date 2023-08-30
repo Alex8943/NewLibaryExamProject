@@ -36,7 +36,7 @@ router.use(passport.session())
 router.use(methodOverride("_method")) //we want to use method-override to use delete and put methods in our forms
 
 // All top 10 Books
-router.get("/", checkAuthenticated, async (req, res) => {
+router.get("/", async (req, res) => {
     //We need to check if the user is admin or not.
     let books
     try{
@@ -44,11 +44,11 @@ router.get("/", checkAuthenticated, async (req, res) => {
     }catch{
         books = []
     }
-    res.render("index", {books: books, firstname: req.user.name })
+    res.render("login", {books: books})
 });
 
 // All top 10 Books
-router.get("/user-login", checkAuthenticated, checkIfUserIsAdmin, async (req, res) => {
+router.get("/user-login", async (req, res) => {
     //We need to check if the user is admin or not.
     let books
     try{
@@ -56,24 +56,24 @@ router.get("/user-login", checkAuthenticated, checkIfUserIsAdmin, async (req, re
     }catch{
         books = []
     }
-    res.render("index", {books: books, firstname: req.user.name })
+    res.render("index", {books: books})
 });
 
 if(process.env.NODE_ENV !== "production"){
     require("dotenv").config();
 }
 
-router.get("/login", checkNotAuthenticated, (req, res) => {
+router.get("/login", (req, res) => {
     res.render("login") 
 });
 
-router.post("/login", checkNotAuthenticated, passport.authenticate("local", {
+router.post("/login", passport.authenticate("local", {
     successRedirect: "/",
     failureRedirect: "/login",
     failureFlash: true
 }));
 
-router.get("/register", checkNotAuthenticated, (req, res) => {
+router.get("/register", (req, res) => {
     res.render("register")
 });
 
@@ -88,7 +88,7 @@ router.delete('/logout', (req, res) => {
 });
 
 
-router.post("/register", checkNotAuthenticated, async (req, res) => {
+router.post("/register", async (req, res) => {
     try{
         const hashedPassword = await bcrypt.hash(req.body.password, 10)
         users.push({
@@ -112,22 +112,7 @@ function checkAuthenticated(req, res, next){
             return next()
         }
         res.redirect("/login")
-}  
-
-function checkNotAuthenticated(req, res, next){
-        if(req.isAuthenticated()){
-            return res.redirect("/")
-        }
-        next()
-}; 
-
-function checkIfUserIsAdmin(req, res, next){
-    if(req.user.name ==="admin"){
-        req.isAuthenticated() === false
-        res.redirect("/")
-    }
-    res.redirect("/user-login")
-};
+}   
 
 
 module.exports = router; //export router so we can use it in app.js
